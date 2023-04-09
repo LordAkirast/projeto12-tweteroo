@@ -1,12 +1,58 @@
-import express, { response } from 'express'
+import express from 'express';
+import cors from 'cors';
 
 const app = express();
+app.use(cors({ origin: 'http://localhost:5500' }));
+app.use(express.json());
 
-app.listen(5000)
+const users = []; // lista de usuários cadastrados
 
-app.get("/sign-up", (req, res) => {
-    res.send({
-        username: "bobesponja",
-        avatar: "https://cdn.shopify.com/s/files/1/0150/0643/3380/files/Screen_Shot_2019-07-01_at_11.35.42_AM_370x230@2x.png"
-    })
-})
+app.post('/sign-up', (req, res) => {
+    const { username, avatar } = req.body;
+  
+    if (!username || !avatar) {
+      res.status(400).send({ error: 'Campos obrigatórios não preenchidos' });
+      return;
+    }
+  
+    // verifica se o usuário já está cadastrado
+    const isUserRegistered = users.some(user => user.username === username);
+  
+    if (isUserRegistered) {
+      res.status(409).send({ error: 'Usuário já cadastrado' });
+      return;
+    }
+  
+    // adiciona o usuário à lista de usuários cadastrados
+    users.push({ username, avatar });
+    
+    res.status(200).send('OK');
+  });
+  
+
+const tweets = []; // lista de tweets
+
+app.post('/tweets', (req, res) => {
+  const { username, tweet } = req.body;
+
+  // verifica se o usuário está cadastrado
+  const isUserRegistered = users.some(user => user.username === username);
+
+  if (!isUserRegistered) {
+    res.status(401).send({ error: 'Usuário não autorizado' });
+    return;
+  }
+
+  // adiciona o tweet à lista de tweets
+  tweets.push({ username, tweet });
+
+  res.send({ message: 'OK' });
+});
+
+app.get('/tweets', (req, res) => {
+  res.send({ tweets });
+});
+
+app.listen(5000, () => {
+  console.log('Servidor iniciado na porta 5000');
+});
