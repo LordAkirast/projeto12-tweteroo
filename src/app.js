@@ -51,11 +51,12 @@ app.post('/tweets', (req, res) => {
 
 app.get('/tweets', (req, res) => {
     if (tweets.length === 0) {
-        res.send([])
+        res.send([]);
     } else {
-        res.send({ tweets });
+        res.send(tweets);
     }
 });
+
 
 app.get('/tweets/latest', (req, res) => {
     const latestTweets = tweets.slice(-10).map(tweet => {
