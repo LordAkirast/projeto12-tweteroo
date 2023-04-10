@@ -5,7 +5,7 @@ const app = express();
 app.use(cors({ origin: 'http://localhost:5500' }));
 app.use(express.json());
 
-const users = []; // lista de usuários cadastrados
+const users = [];
 
 app.post('/sign-up', (req, res) => {
     const { username, avatar } = req.body;
@@ -15,7 +15,7 @@ app.post('/sign-up', (req, res) => {
         return;
     }
 
-    // verifica se o usuário já está cadastrado
+   
     const isUserRegistered = users.some(user => user.username === username);
 
     if (isUserRegistered) {
@@ -23,19 +23,19 @@ app.post('/sign-up', (req, res) => {
         return;
     }
 
-    // adiciona o usuário à lista de usuários cadastrados
+    
     users.push({ username, avatar });
 
     res.status(200).send('OK');
 });
 
 
-const tweets = []; // lista de tweets
+const tweets = []; 
 
 app.post('/tweets', (req, res) => {
     const { username, tweet } = req.body;
 
-    // verifica se o usuário está cadastrado
+   
     const isUserRegistered = users.some(user => user.username === username);
 
     if (!isUserRegistered) {
@@ -43,7 +43,7 @@ app.post('/tweets', (req, res) => {
         return;
     }
 
-    // adiciona o tweet à lista de tweets
+   
     tweets.push({ username, tweet });
 
     res.send({ message: 'OK' });
