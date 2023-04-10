@@ -57,6 +57,19 @@ app.get('/tweets', (req, res) => {
     }
 });
 
+app.get('/tweets/latest', (req, res) => {
+    const latestTweets = tweets.slice(-10).map(tweet => {
+        const user = users.find(user => user.username === tweet.username);
+        return {
+            username: tweet.username,
+            avatar: user.avatar,
+            tweet: tweet.tweet
+        }
+    });
+
+    res.send(latestTweets);
+});
+
 app.listen(5000, () => {
     console.log('Servidor iniciado na porta 5000');
 });
